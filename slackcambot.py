@@ -3,7 +3,7 @@ import time
 import subprocess
 from slackclient import SlackClient
 import slack_cmd_process
-import threading
+import threadind
 
 def get_bot_id(BOT_NAME,slack_client):
     """
@@ -58,6 +58,7 @@ def parse_slack_output(slack_rtm_output):
 
 def process_slack_output(cmd,chn,msg,usr):
     """
+    
         Message directed at bot is created into thread , to speed up the
         processing of the message.
     """
