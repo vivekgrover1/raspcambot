@@ -63,29 +63,3 @@ def cmd_process(command):
 
     return "Not sure what you mean, please use help.","danger"
 
-def cmd_exec(command,host,keyword):
-    """
-      execute the command on the provided host in the message and return message
-      based of successfull or unsuccessful cmd execution.
-
-    """
-    try:
-        status = execute(remote_exec, 'ec2-user','%s' %command,hosts=["%s" %host])
-        #print status["%s" %host][0]
-        if  status["%s" %host][1] == False :
-            return "Action EC2.%s completed." %keyword +" \nStatus: Successfull\nHost: %s\n\nResult:\n\n" %host + status["%s" %host][0],"good"
-    except :
-        return "Coundn't Connect the host, please check the host name or try again.","danger"
-
-def remote_exec(user,cmd):
-    """
-      execute the actual command on the remote aws machine using fabric maodule and return the output
-      of the command and status of the cmd execution success or failed.
-    """
-
-    with hide('output'):
-         env.user=user
-         env.key_filename = os.environ.get('EC2_KEY_PATH')
-         env.warn_only='True'
-         result= run(cmd)
-         return result, result.failed
