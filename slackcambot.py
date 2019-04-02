@@ -3,7 +3,7 @@ import time
 import subprocess
 from slackclient import SlackClient
 import slack_cmd_process
-import threadind
+import threading
 
 def get_bot_id(BOT_NAME,slack_client):
     """
@@ -27,14 +27,8 @@ def handle_command(command, channel,msg_id,user_id):
         message to slack thread or message.
     """
 
-    response,color=slack_cmd_process.cmd_process(command)
+    slack_cmd_process.cmd_process(command)
 
-#    if msg_id == "Thread_False":
-#        slack_client.api_call("chat.postMessage", channel=channel,
-#                text="<@%s> " %user_id , as_user=True,attachments=[{"text": "%s" %response,"color":"%s" %color}])
-#    else:
-#        slack_client.api_call("chat.postMessage", channel=channel,
-#                text="<@%s> " %user_id, as_user=True,thread_ts=msg_id,attachments=[{"text": "%s" %response,"color":"%s" %color}])
 
 
 def parse_slack_output(slack_rtm_output):
@@ -58,7 +52,6 @@ def parse_slack_output(slack_rtm_output):
 
 def process_slack_output(cmd,chn,msg,usr):
     """
-    
         Message directed at bot is created into thread , to speed up the
         processing of the message.
     """
@@ -78,16 +71,14 @@ if __name__ == "__main__":
 
       WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
       if slack_client.rtm_connect():
-        print("StarterBot connected and running!")
+        print("raspcambot connected and running!")
         while True:
            sc=slack_client.rtm_read()
-           print (sc)
            command, channel, msg_id,user_id = parse_slack_output(sc)
-           print (command, channel, msg_id, user_id)
+           #print (command, channel, msg_id, user_id)
            
            if command and channel and msg_id and user_id:
               process_slack_output(command,channel,msg_id,user_id)
            time.sleep(WEBSOCKET_DELAY)
       else:
          print("Connection failed. Invalid Slack token or bot ID?")
-
